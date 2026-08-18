@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# RESQ local database and secrets
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# Local backups
+*_backup.db
+*.bak
+
+# Editor folders
+.vscode/
+.idea/
