@@ -15,11 +15,18 @@ DATABASE_PATH = INSTANCE_DIR / "resq.db"
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "resq-dev-secret-change-me")
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-CORS(app, supports_credentials=True)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=["http://localhost:5173"],
+)
 
 ALLOWED_ROLES = {"patient", "hospital", "admin"}
 ALLOWED_SOS_STATUSES = {"pending", "accepted", "rejected", "in progress", "resolved"}
@@ -304,10 +311,28 @@ def login():
     )
 
 
+def logout():
+    session.clear()
+    return jsonify({"message": "Logged out"})
 @app.post("/api/logout")
 def logout():
     session.clear()
     return jsonify({"message": "Logged out"})
+
+@app.get("/api/me")
+def me():
+    user = current_user()
+
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role,
+        "hospital_id": user.hospital_id,
+    })
 
 
 @app.get("/api/hospitals")
@@ -448,21 +473,38 @@ def update_sos_status(sos_id):
 @app.put("/api/sos/<int:sos_id>/accept")
 @require_role("hospital", "admin")
 def accept_sos(sos_id):
-    request_data = {"status": "accepted"}
-    with app.test_request_context(json=request_data):
-        session["user_id"] = session.get("user_id")
-        response = update_sos_status(sos_id)
-    return response
+    sos = db.session.get(SOSRequest, sos_id)
+
+    if not sos:
+        return jsonify({"error": "SOS request not found"}), 404
+
+    sos.status = "accepted"
+    db.session.commit()
+
+    return jsonify({
+        "message": "SOS accepted",
+        "sos_id": sos.id,
+        "status": sos.status,
+    })
 
 
 @app.put("/api/sos/<int:sos_id>/reject")
 @require_role("hospital", "admin")
 def reject_sos(sos_id):
-    request_data = {"status": "rejected"}
-    with app.test_request_context(json=request_data):
-        session["user_id"] = session.get("user_id")
-        response = update_sos_status(sos_id)
-    return response
+    sos = db.session.get(SOSRequest, sos_id)
+
+    if not sos:
+        return jsonify({"error": "SOS request not found"}), 404
+
+    sos.status = "rejected"
+    db.session.commit()
+
+    return jsonify({
+        "message": "SOS rejected",
+        "sos_id": sos.id,
+        "status": sos.status,
+    })
+    
 
 
 @app.get("/api/hospital/<int:hospital_id>/availability")
@@ -615,6 +657,6 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-    print(f"RESQ backend running at http://localhost:5000")
+    print(f"RESQ backend running at http://localhost:5001")
     print(f"Database: {DATABASE_PATH}")
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)

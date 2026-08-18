@@ -1,3 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Local database
+instance/
+
+# Session/test files
+cookies.txt
+
+# Editor backup files
+*.save
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
