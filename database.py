@@ -1,4 +1,7 @@
-import os
+import os 
+import random
+import string
+from datetime import timedelta
 from datetime import datetime
 from functools import wraps
 from pathlib import Path
@@ -32,6 +35,7 @@ ALLOWED_ROLES = {"patient", "hospital", "admin"}
 ALLOWED_SOS_STATUSES = {"pending", "accepted", "rejected", "in progress", "resolved"}
 
 
+# ============ MODELS ============
 class User(db.Model):
     __tablename__ = "users"
 
@@ -105,7 +109,23 @@ class HospitalAvailability(db.Model):
         db.CheckConstraint("available_count <= total_count", name="availability_valid"),
     )
 
+class OTPVerification(db.Model):
+    __tablename__ = "otp_verifications"
 
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    otp_code = db.Column(db.String(6), nullable=False)
+    phone = db.Column(db.String(30), nullable=False)
+    purpose = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    is_used = db.Column(db.Boolean, default=False, nullable=False)
+
+    user = db.relationship("User", backref="otp_verifications")
+
+
+
+# ============ HELPER FUNCTIONS ============
 def get_json():
     return request.get_json(silent=True) or {}
 
@@ -232,6 +252,7 @@ def seed_demo_data():
     db.session.commit()
 
 
+# ============ FRONTEND ROUTES ============
 @app.get("/")
 def patient_home():
     patient_dir = BASE_DIR / "static" / "patient"
@@ -250,11 +271,13 @@ def patient_files(filename):
     return send_from_directory(BASE_DIR / "static" / "patient", filename)
 
 
+# ============ API ENDPOINTS ============
 @app.get("/api/health")
 def health():
     return jsonify({"success": True, "message": "RESQ backend is running"})
 
 
+# ============ USER ENDPOINTS ============
 @app.post("/api/signup")
 def signup():
     data = get_json()
@@ -287,37 +310,63 @@ def signup():
 
 @app.post("/api/login")
 def login():
+    """Step 1: Validate credentials and send OTP"""
+    
     data = get_json()
     email = str(data.get("email", "")).strip().lower()
     password = data.get("password", "")
+    
     user = User.query.filter_by(email=email).first()
-
+    
     valid = user and check_password_hash(user.password_hash, password)
     if not valid:
         return jsonify({"error": "Invalid email or password"}), 401
-
+    
+    # For hospital/admin users, require 2FA
+    if user.role in ["hospital", "admin"]:
+        # Generate OTP
+        otp_code = generate_otp()
+        expires_at = datetime.utcnow() + timedelta(minutes=5)
+        
+        otp = OTPVerification(
+            user_id=user.id,
+            otp_code=otp_code,
+            phone=user.phone,
+            purpose="login",
+            expires_at=expires_at
+        )
+        db.session.add(otp)
+        db.session.commit()
+        
+        # Send OTP via SMS (or print for testing)
+        send_otp_sms(user.phone, otp_code, "login")
+        
+        return jsonify({
+            "message": "OTP sent to your phone",
+            "requires_2fa": True,
+            "user_id": user.id,
+            "phone_last_4": user.phone[-4:] if len(user.phone) > 4 else user.phone
+        })
+    
+    # For patients, login directly (no 2FA required)
     session["user_id"] = user.id
-    return jsonify(
-        {
-            "message": "Login successful",
-            "user": {
-                "id": user.id,
-                "name": user.name,
-                "email": user.email,
-                "role": user.role,
-                "hospital_id": user.hospital_id,
-            },
-        }
-    )
+    return jsonify({
+        "message": "Login successful",
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "hospital_id": user.hospital_id,
+        },
+    })
+     
 
-
-def logout():
-    session.clear()
-    return jsonify({"message": "Logged out"})
 @app.post("/api/logout")
 def logout():
     session.clear()
     return jsonify({"message": "Logged out"})
+
 
 @app.get("/api/me")
 def me():
@@ -335,28 +384,194 @@ def me():
     })
 
 
+# ============ HOSPITAL ENDPOINTS ============
 @app.get("/api/hospitals")
 def get_hospitals():
+    """Get all hospitals or filter by city"""
+    
     city = request.args.get("city")
+    state = request.args.get("state")
+    
     query = Hospital.query
+    
     if city:
         query = query.filter(db.func.lower(Hospital.city) == city.lower())
-    return jsonify(
-        [
-            hospital_response(hospital)
-            for hospital in query.order_by(Hospital.name).all()
-        ]
-    )
+    
+    if state:
+        query = query.filter(db.func.lower(Hospital.state) == state.lower())
+    
+    hospitals = query.order_by(Hospital.name).all()
+    
+    return jsonify([
+        {
+            "id": h.id,
+            "name": h.name,
+            "address": h.address,
+            "city": h.city,
+            "state": h.state,
+            "latitude": h.latitude,
+            "longitude": h.longitude,
+            "phone": h.phone,
+            "created_at": iso(h.created_at)
+        }
+        for h in hospitals
+    ])
 
 
 @app.get("/api/hospitals/<int:hospital_id>")
 def get_hospital(hospital_id):
+    """Get single hospital by ID"""
+    
     hospital = db.session.get(Hospital, hospital_id)
+    
     if not hospital:
         return jsonify({"error": "Hospital not found"}), 404
+    
     return jsonify(hospital_response(hospital))
 
 
+@app.get("/api/hospitals/nearby")
+def get_nearby_hospitals_api():
+    """Get hospitals near given coordinates"""
+    
+    latitude = request.args.get("lat", type=float)
+    longitude = request.args.get("lng", type=float)
+    max_distance = request.args.get("distance", default=10, type=int)
+    
+    if not latitude or not longitude:
+        return jsonify({"error": "Latitude and longitude required"}), 400
+    
+    all_hospitals = Hospital.query.all()
+    
+    import math
+    
+    def calculate_distance(lat1, lon1, lat2, lon2):
+        R = 6371
+        dlat = math.radians(lat2 - lat1)
+        dlon = math.radians(lon2 - lon1)
+        a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+        c = 2 * math.asin(math.sqrt(a))
+        return R * c
+    
+    nearby = []
+    for h in all_hospitals:
+        if h.latitude and h.longitude:
+            distance = calculate_distance(latitude, longitude, h.latitude, h.longitude)
+            if distance <= max_distance:
+                nearby.append({
+                    "id": h.id,
+                    "name": h.name,
+                    "address": h.address,
+                    "city": h.city,
+                    "state": h.state,
+                    "latitude": h.latitude,
+                    "longitude": h.longitude,
+                    "phone": h.phone,
+                    "distance_km": round(distance, 2)
+                })
+    
+    nearby.sort(key=lambda x: x["distance_km"])
+    
+    return jsonify(nearby)
+
+
+@app.post("/api/hospitals")
+@require_role("admin")
+def add_hospital():
+    """Add new hospital (admin only)"""
+    
+    data = get_json()
+    required = ["name", "address", "city", "phone"]
+    if any(not data.get(field) for field in required):
+        return jsonify({"error": "name, address, city, and phone are required"}), 400
+
+    existing = Hospital.query.filter_by(
+        name=data["name"].strip(), city=data["city"].strip()
+    ).first()
+    if existing:
+        return jsonify({"error": "Hospital already exists"}), 409
+
+    hospital = Hospital(
+        name=data["name"].strip(),
+        address=data["address"].strip(),
+        city=data["city"].strip(),
+        state=data.get("state"),
+        phone=data["phone"].strip(),
+        latitude=data.get("latitude"),
+        longitude=data.get("longitude"),
+    )
+    db.session.add(hospital)
+    db.session.commit()
+    return jsonify(
+        {
+            "message": "Hospital added successfully",
+            "hospital": hospital_response(hospital),
+        }
+    ), 201
+
+
+@app.put("/api/hospitals/<int:hospital_id>")
+@require_role("admin")
+def update_hospital(hospital_id):
+    """Update hospital details (admin only)"""
+    
+    hospital = db.session.get(Hospital, hospital_id)
+    
+    if not hospital:
+        return jsonify({"error": "Hospital not found"}), 404
+    
+    data = get_json()
+    
+    if "name" in data:
+        hospital.name = data["name"].strip()
+    if "address" in data:
+        hospital.address = data["address"].strip()
+    if "city" in data:
+        hospital.city = data["city"].strip()
+    if "state" in data:
+        hospital.state = data["state"].strip()
+    if "phone" in data:
+        hospital.phone = data["phone"].strip()
+    if "latitude" in data:
+        hospital.latitude = data["latitude"]
+    if "longitude" in data:
+        hospital.longitude = data["longitude"]
+    
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Hospital updated successfully!",
+        "hospital": {
+            "id": hospital.id,
+            "name": hospital.name,
+            "address": hospital.address,
+            "city": hospital.city,
+            "state": hospital.state,
+            "phone": hospital.phone
+        }
+    })
+
+
+@app.delete("/api/hospitals/<int:hospital_id>")
+@require_role("admin")
+def delete_hospital(hospital_id):
+    """Delete hospital (admin only)"""
+    
+    hospital = db.session.get(Hospital, hospital_id)
+    
+    if not hospital:
+        return jsonify({"error": "Hospital not found"}), 404
+    
+    db.session.delete(hospital)
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Hospital deleted successfully!",
+        "hospital_id": hospital_id
+    })
+
+
+# ============ SOS ENDPOINTS ============
 @app.post("/api/sos")
 def send_sos():
     data = get_json()
@@ -385,10 +600,12 @@ def send_sos():
         age=data.get("age"),
         gender=data.get("gender"),
         phone=data["phone"].strip(),
-        notes=data.get("notes"),
+        notes=data.get("notes")
     )
+    
     db.session.add(sos)
     db.session.commit()
+    
     return (
         jsonify(
             {"message": "SOS sent successfully", "sos_id": sos.id, "status": sos.status}
@@ -504,9 +721,9 @@ def reject_sos(sos_id):
         "sos_id": sos.id,
         "status": sos.status,
     })
-    
 
 
+# ============ AVAILABILITY ENDPOINTS ============
 @app.get("/api/hospital/<int:hospital_id>/availability")
 def get_availability(hospital_id):
     if not db.session.get(Hospital, hospital_id):
@@ -580,6 +797,47 @@ def update_availability(hospital_id):
         }
     )
 
+def generate_otp(length=6):
+    """Generate random OTP code"""
+    return ''.join(random.choices(string.digits, k=length))
+
+
+def send_otp_sms(phone, otp_code, purpose="verification"):
+    """Send OTP via SMS - TESTING MODE"""
+    
+    # For testing, just print OTP
+    print(f"\n{'='*50}")
+    print(f"🔐 OTP for {phone}: {otp_code}")
+    print(f"{'='*50}\n")
+    
+    # Later, replace with actual Twilio SMS:
+    # message = f"Your RESQ verification code: {otp_code}"
+    # result = send_sms(phone, message)
+    # return result
+    
+    return {"success": True, "testing": True}
+
+
+def verify_otp(user_id, otp_code):
+    """Verify OTP code"""
+    otp = OTPVerification.query.filter_by(
+        user_id=user_id,
+        otp_code=otp_code,
+        is_used=False
+    ).first()
+    
+    if not otp:
+        return {"valid": False, "error": "Invalid OTP"}
+    
+    if datetime.utcnow() > otp.expires_at:
+        return {"valid": False, "error": "OTP expired"}
+    
+    # Mark as used
+    otp.is_used = True
+    db.session.commit()
+    
+    return {"valid": True, "user_id": user_id}
+
 
 @app.get("/api/search")
 def search_resources():
@@ -608,43 +866,91 @@ def search_resources():
             )
     return jsonify(result)
 
-
-@app.post("/api/hospitals")
-@require_role("admin")
-def add_hospital():
+@app.post("/api/verify-otp")
+def verify_otp_endpoint():
+    """Step 2: Verify OTP and complete login"""
+    
     data = get_json()
-    required = ["name", "address", "city", "phone"]
-    if any(not data.get(field) for field in required):
-        return jsonify({"error": "name, address, city, and phone are required"}), 400
+    user_id = data.get("user_id")
+    otp_code = data.get("otp")
+    
+    if not user_id or not otp_code:
+        return jsonify({"error": "user_id and otp are required"}), 400
+    
+    # Verify OTP
+    result = verify_otp(user_id, otp_code)
+    
+    if not result["valid"]:
+        return jsonify({"error": result["error"]}), 400
+    
+    # Get user
+    user = db.session.get(User, user_id)
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    # Complete login
+    session["user_id"] = user.id
+    
+    return jsonify({
+        "message": "Login successful",
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "hospital_id": user.hospital_id,
+        },
+    })
 
-    existing = Hospital.query.filter_by(
-        name=data["name"].strip(), city=data["city"].strip()
-    ).first()
-    if existing:
-        return jsonify({"error": "Hospital already exists"}), 409
 
-    hospital = Hospital(
-        name=data["name"].strip(),
-        address=data["address"].strip(),
-        city=data["city"].strip(),
-        state=data.get("state"),
-        phone=data["phone"].strip(),
-        latitude=data.get("latitude"),
-        longitude=data.get("longitude"),
+@app.post("/api/resend-otp")
+def resend_otp():
+    """Resend OTP to user's phone"""
+    
+    data = get_json()
+    user_id = data.get("user_id")
+    
+    if not user_id:
+        return jsonify({"error": "user_id is required"}), 400
+    
+    user = db.session.get(User, user_id)
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    # Invalidate old OTPs
+    old_otps = OTPVerification.query.filter_by(
+        user_id=user_id,
+        is_used=False
+    ).all()
+    
+    for otp in old_otps:
+        otp.is_used = True
+    
+    # Generate new OTP
+    otp_code = generate_otp()
+    expires_at = datetime.utcnow() + timedelta(minutes=5)
+    
+    otp = OTPVerification(
+        user_id=user.id,
+        otp_code=otp_code,
+        phone=user.phone,
+        purpose="login",
+        expires_at=expires_at
     )
-    db.session.add(hospital)
+    db.session.add(otp)
     db.session.commit()
-    return (
-        jsonify(
-            {
-                "message": "Hospital added successfully",
-                "hospital": hospital_response(hospital),
-            }
-        ),
-        201,
-    )
+    
+    # Send OTP
+    send_otp_sms(user.phone, otp_code, "login")
+    
+    return jsonify({
+        "message": "New OTP sent",
+        "phone_last_4": user.phone[-4:] if len(user.phone) > 4 else user.phone
+    })
 
-
+# ============ DATABASE INITIALIZATION ============
 @app.cli.command("seed")
 def seed_command():
     seed_demo_data()
@@ -656,6 +962,8 @@ with app.app_context():
     seed_demo_data()
 
 
+
+# ============ RUN SERVER ============
 if __name__ == "__main__":
     print(f"RESQ backend running at http://localhost:5001")
     print(f"Database: {DATABASE_PATH}")
