@@ -1,44 +1,43 @@
 # RESQ
 
-RESQ is a smart emergency healthcare coordination platform that connects patients with hospitals during critical situations.
+RESQ is a smart emergency healthcare coordination platform designed to connect patients with hospitals during critical situations.
 
-Patients can view nearby hospitals, check the availability of ICU beds, blood, oxygen, emergency services, and ambulances, and submit emergency requests directly to a selected hospital. Hospital staff can securely log in, manage incoming emergency requests, update their hospital’s resource availability, and respond to patients in real time.
+The platform allows patients to find hospitals and check the availability of essential emergency resources such as ICU beds, blood, oxygen, emergency services, and ambulances. Patients can also submit SOS requests to hospitals and track their request status.
+
+Hospital staff can securely log in, manage incoming emergency requests, update resource availability, and respond to patient emergencies through a centralized backend.
 
 ## Features
 
-### Patient portal
+### Patient Portal
 
-- View registered hospitals.
-- Search hospitals by city.
-- View hospital addresses, phone numbers, and map coordinates.
-- Check ICU bed availability.
-- Check blood availability.
-- Check oxygen availability.
-- Check emergency-service availability.
-- Check ambulance availability.
-- Submit an SOS emergency request.
-- Track the status of an emergency request.
-- Manage basic patient details.
+- View registered hospitals
+- Search hospitals by city
+- View hospital contact and location details
+- Check ICU bed availability
+- Check blood availability
+- Check oxygen availability
+- Check ambulance availability
+- Check emergency-service availability
+- Submit SOS emergency requests
+- Track emergency request status
+- Manage basic patient information
 
-### Hospital portal
+### Hospital Portal
 
-- Hospital staff login.
-- View emergency requests sent to their hospital.
-- View patient details related to an emergency request.
-- Accept or reject emergency requests.
-- Update request statuses such as:
-  - Pending
-  - Accepted
-  - Rejected
-  - In progress
-  - Resolved
-- Update ICU, blood, oxygen, ambulance, and emergency-service availability.
+- Secure hospital staff login
+- View incoming emergency requests
+- View patient information related to requests
+- Accept or reject emergency requests
+- Update emergency request status
+- Manage ICU, blood, oxygen, ambulance, and emergency-service availability
+- Maintain up-to-date hospital resource information
 
-### Admin features
+### Admin Features
 
-- Add new hospitals.
-- Manage hospital information.
-- Seed demo hospitals and resource data.
+- Add hospitals
+- Manage hospital information
+- Manage hospital resource data
+- Seed initial/demo hospital data
 
 ## Technology Stack
 
@@ -49,21 +48,23 @@ Patients can view nearby hospitals, check the availability of ICU beds, blood, o
 - Flask-SQLAlchemy
 - Flask-CORS
 - SQLite for local development
-- PostgreSQL for online deployment
+- PostgreSQL support for deployment
 - Werkzeug password hashing
 - Flask sessions for authentication
 
 ### Frontend
 
+- React
+- Vite
+- JavaScript
 - HTML
 - CSS
-- JavaScript
+- ESLint
 
-### Deployment
+### Database
 
-The application can be deployed using platforms such as Render or Railway.
-
-The backend can connect to a hosted PostgreSQL database through the `DATABASE_URL` environment variable.
+- SQLite for local development
+- PostgreSQL for production deployment
 
 ## Project Structure
 
@@ -71,27 +72,21 @@ The backend can connect to a hosted PostgreSQL database through the `DATABASE_UR
 RESQ/
 ├── database.py
 ├── requirements.txt
+├── package.json
+├── package-lock.json
 ├── README.md
-├── instance/
-│   └── resq.db
-└── static/
-    └── patient/
-        ├── index.html
-        ├── patient.css
-        └── patient.js
+├── .gitignore
+└── frontend/
+    ├── public/
+    ├── src/
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    ├── eslint.config.js
+    └── index.html
 ```
-
-The `instance/resq.db` file is used for local SQLite development. In production, the application should use a hosted PostgreSQL database instead.
 
 ## API Overview
-
-### General
-
-```text
-GET /api/health
-```
-
-Checks whether the backend is running.
 
 ### Authentication
 
@@ -109,18 +104,14 @@ GET  /api/hospitals/<hospital_id>
 POST /api/hospitals
 ```
 
-The `POST /api/hospitals` endpoint is restricted to administrators.
-
-### Hospital availability
+### Hospital Availability
 
 ```text
 GET /api/hospital/<hospital_id>/availability
 PUT /api/hospital/<hospital_id>/availability
 ```
 
-Hospital staff can update resources only for their assigned hospital.
-
-### Emergency requests
+### Emergency Requests
 
 ```text
 POST /api/sos
@@ -131,206 +122,144 @@ PUT  /api/sos/<sos_id>/reject
 PUT  /api/sos/<sos_id>/status
 ```
 
-Hospital staff can view and manage emergency requests belonging to their hospital.
-
-### Resource search
+### Resource Search
 
 ```text
 GET /api/search
 ```
 
-Example:
-
-```text
-/api/search?name=ICU
-/api/search?name=Blood
-/api/search?name=Oxygen
-```
+The search API can be used to find hospitals/resources based on requirements such as ICU, blood, oxygen, and other emergency services.
 
 ## Local Setup
 
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/Rohithkumar-16/RESQ.git
 cd RESQ
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
 
 #### Windows
 
-```powershell
+```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-#### macOS or Linux
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install dependencies
+### 3. Install backend dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set the secret key
-
-#### Windows PowerShell
-
-```powershell
-$env:SECRET_KEY = "replace-with-a-long-random-secret"
-```
-
-#### macOS or Linux
+### 4. Install frontend dependencies
 
 ```bash
-export SECRET_KEY="replace-with-a-long-random-secret"
+cd frontend
+npm install
 ```
 
-### 5. Run the backend
+### 5. Start the backend
+
+From the project root:
 
 ```bash
 python database.py
 ```
 
-The backend will run at:
+The Flask backend runs on:
 
 ```text
 http://localhost:5000
 ```
 
-### 6. Check the backend
+### 6. Start the frontend
 
-Open:
+From the `frontend` directory:
 
-```text
-http://localhost:5000/api/health
+```bash
+npm run dev
 ```
 
-Expected response:
-
-```json
-{
-  "success": true,
-  "message": "RESQ backend is running"
-}
-```
-
-The patient frontend is served from:
-
-```text
-http://localhost:5000/
-```
-
-if the files are present in:
-
-```text
-static/patient/
-```
+The Vite development server will provide the frontend URL in the terminal.
 
 ## Database
 
-For local development, RESQ uses SQLite:
+RESQ uses SQLite during local development.
+
+For production deployment, PostgreSQL can be configured through the `DATABASE_URL` environment variable.
+
+The database stores information related to:
+
+- Patients
+- Hospitals
+- Hospital resources
+- Emergency/SOS requests
+- Authentication and user roles
+
+## Application Workflow
 
 ```text
-sqlite:///instance/resq.db
+Patient
+   ↓
+Search Hospitals
+   ↓
+Check Resource Availability
+   ↓
+Select Hospital
+   ↓
+Submit SOS Request
+   ↓
+Request Stored in Database
+   ↓
+Hospital Staff Receives Request
+   ↓
+Accept / Reject Request
+   ↓
+Update Request Status
+   ↓
+Update Hospital Resource Availability
+   ↓
+Patient Tracks Request
 ```
-
-For deployment, configure PostgreSQL using:
-
-```text
-DATABASE_URL=your-postgresql-connection-string
-```
-
-The database configuration should select PostgreSQL when `DATABASE_URL` is available and SQLite otherwise.
 
 ## Deployment
 
+The backend can be deployed using a platform such as Render or Railway.
+
 For production deployment:
 
-1. Push the project to GitHub.
-2. Create a hosted PostgreSQL database.
-3. Create a Flask web service on a hosting platform.
-4. Add the `DATABASE_URL` environment variable.
-5. Add a secure `SECRET_KEY`.
-6. Install the dependencies from `requirements.txt`.
-7. Use a production WSGI server.
-
-Example start command:
-
-```bash
-gunicorn database:app
-```
-
-Do not use Flask's development server for production deployment.
-
-## Example Workflow
-
-```text
-1. A patient opens the RESQ patient portal.
-2. The patient views available hospitals and resources.
-3. The patient selects a hospital.
-4. The patient submits an emergency request.
-5. The request is stored in the shared database.
-6. The selected hospital staff logs in.
-7. Hospital staff views the incoming request.
-8. Staff accepts or rejects the request.
-9. Staff updates resource availability.
-10. The patient can check the updated request status and hospital resources.
-```
+1. Configure a PostgreSQL database.
+2. Set the `DATABASE_URL` environment variable.
+3. Configure a secure `SECRET_KEY`.
+4. Install dependencies from `requirements.txt`.
+5. Build and deploy the React frontend.
+6. Run the Flask application using a production WSGI server.
 
 ## Important Note
 
-RESQ is currently a basic emergency coordination and hospital resource management prototype. It is designed for demonstration and educational purposes.
+RESQ is currently a prototype developed for demonstration and educational purposes.
 
-A production healthcare platform would require additional features such as:
-
-- Stronger authentication.
-- HTTPS.
-- Hospital verification.
-- Role-management workflows.
-- Audit logs.
-- Database migrations.
-- Data privacy and compliance controls.
-- Notifications through SMS, email, or push messages.
-- Location and map-service integration.
-- Monitoring and backup systems.
+A production-ready healthcare platform would require additional security, authentication, hospital verification, audit logging, data privacy controls, HTTPS, monitoring, backups, notifications, and compliance with applicable healthcare regulations.
 
 ## Future Improvements
 
-- Real-time notifications for emergency requests.
-- GPS-based nearby-hospital search.
-- Online ambulance tracking.
-- Hospital verification.
-- Patient medical-record integration.
-- Blood-bank integration.
-- Multi-language support.
-- Doctor and ambulance-driver portals.
-- Analytics dashboard for hospitals and administrators.
+- Real-time emergency notifications
+- GPS-based hospital discovery
+- Live ambulance tracking
+- SMS/email/push notifications
+- Hospital verification
+- Advanced role-based access control
+- Improved authentication and security
+- Production database migrations
+- Real-time resource synchronization
+- Healthcare data privacy and compliance
+- Deployment and monitoring infrastructure
 
-## License
+## Team NOIR
 
-This project is intended for educational and demonstration purposes.
+Built as a prototype for emergency healthcare coordination.
 
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Find care. Request help. Respond faster.
