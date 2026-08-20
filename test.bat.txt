@@ -1,0 +1,25 @@
+@echo off
+echo ====================================
+echo Testing RESQ API
+echo ====================================
+echo.
+
+echo 1. Testing Health...
+curl http://localhost:5001/api/health
+echo.
+echo.
+
+echo 2. Testing Signup...
+curl -X POST http://localhost:5001/api/signup -H "Content-Type: application/json" -d "{\"name\":\"Test Hospital\",\"email\":\"hospital@test.com\",\"password\":\"password123\",\"phone\":\"+919876543210\",\"role\":\"hospital\"}"
+echo.
+echo.
+
+echo 3. Testing Login...
+curl -X POST http://localhost:5001/api/login -H "Content-Type: application/json" -d "{\"email\":\"hospital@test.com\",\"password\":\"password123\"}"
+echo.
+echo.
+
+echo ====================================
+echo Done! Check console for OTP
+echo ====================================
+pause
