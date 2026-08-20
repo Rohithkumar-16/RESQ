@@ -249,6 +249,25 @@ def seed_demo_data():
                     )
                 )
 
+    hospital_user = User.query.filter_by(
+        email="hospital@resq.com"
+    ).first()
+
+    if not hospital_user:
+        city_hospital = Hospital.query.filter_by(
+            name="City Hospital"
+        ).first()
+
+        db.session.add(
+            User(
+                name="City Hospital Admin",
+                email="hospital@resq.com",
+                password_hash=generate_password_hash("resq123"),
+                phone="9999999999",
+                role="hospital",
+                hospital_id=city_hospital.id,
+            )
+        )
     db.session.commit()
 
 
