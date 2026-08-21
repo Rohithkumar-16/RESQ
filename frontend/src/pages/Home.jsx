@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import ResqLiveMap from "../components/ResqLiveMap";
 import {
   ArrowRight,
   Bed,
@@ -14,6 +16,33 @@ import "../App.css";
 
 function Home() {
   const navigate = useNavigate();
+
+  const [hospitals, setHospitals] = useState([]);
+
+  useEffect(() => {
+    async function fetchHospitals() {
+      try {
+        const response = await fetch(
+          "http://localhost:5001/api/hospitals"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch hospitals");
+        }
+
+        const data = await response.json();
+
+        setHospitals(data);
+      } catch (error) {
+        console.error(
+          "Failed to load hospitals for map:",
+          error
+        );
+      }
+    }
+
+    fetchHospitals();
+  }, []);
 
   return (
     <div className="resq-home">
@@ -326,21 +355,17 @@ function Home() {
 
           <div className="resq-search-map">
 
-            <div className="resq-map-grid"></div>
+            <ResqLiveMap
+              hospitals={hospitals}
+              onHospitalSelect={(hospital) => {
+                localStorage.setItem(
+                  "resq_selected_hospital",
+                  JSON.stringify(hospital)
+                );
 
-            <div className="resq-map-center">
-
-              <div className="resq-map-pulse"></div>
-
-              <MapPin size={25} />
-
-            </div>
-
-            <div className="resq-map-label">
-              <strong>Hospitals near you</strong>
-              <span>Search to explore available care</span>
-            </div>
-
+                navigate("/patient-dashboard");
+              }}
+            />
           </div>
 
         </section>
@@ -589,9 +614,8 @@ function CareCard({
 }) {
   return (
     <button
-      className={`resq-care-card ${
-        emergency ? "emergency" : ""
-      }`}
+      className={`resq-care-card ${emergency ? "emergency" : ""
+        }`}
       onClick={onClick}
     >
 

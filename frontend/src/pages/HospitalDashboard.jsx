@@ -468,36 +468,44 @@ function HospitalDashboard() {
 
       <header className="dashboard-header">
         <div className="dashboard-header-inner">
-          <div>
+
+          <div className="dashboard-brand">
             <div className="dashboard-logo">RESQ</div>
 
-            <p className="dashboard-subtitle">Hospital Emergency Dashboard</p>
+            <div className="dashboard-brand-divider" />
+
+            <div className="dashboard-brand-info">
+              <strong>Hospital Dashboard</strong>
+              <span>Emergency response center</span>
+            </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-            }}
-          >
+          <div className="dashboard-header-actions">
+
+            <div className="dashboard-system-status">
+              <span className="dashboard-live-dot" />
+              System Live
+            </div>
+
             <button
               className="dashboard-refresh"
               onClick={loadDashboard}
               disabled={updatingResources}
             >
-              <RefreshCw size={17} />
+              <RefreshCw size={16} />
               Refresh
             </button>
 
             <button
-              className="dashboard-refresh"
+              className="dashboard-logout"
               onClick={handleLogout}
               disabled={updatingResources}
             >
               Logout
             </button>
+
           </div>
+
         </div>
       </header>
 
@@ -530,7 +538,7 @@ function HospitalDashboard() {
             NO HOSPITAL REGISTERED
         =================================================== */}
 
-       
+
         {/* ==================================================
             USER INFORMATION
         =================================================== */}
@@ -616,222 +624,222 @@ function HospitalDashboard() {
     HOSPITAL RESOURCES
 =================================================== */}
 
-<section className="dashboard-availability">
+            <section className="dashboard-availability">
 
-  <div className="dashboard-section-heading">
-    <div>
-      <p className="dashboard-label">HOSPITAL RESOURCES</p>
-
-      <h2>Resource availability</h2>
-
-      <p className="dashboard-section-description">
-        Monitor and update your hospital's emergency resources in real time.
-      </p>
-    </div>
-
-    <div className="dashboard-resource-count">
-      {availability.length}
-      <span>Resources</span>
-    </div>
-  </div>
-
-  {availability.length === 0 ? (
-
-    <div className="dashboard-empty">
-      <TriangleAlert size={36} />
-
-      <h3>No resources found</h3>
-
-      <p>
-        No availability information has been configured for this hospital.
-      </p>
-    </div>
-
-  ) : (
-
-    <>
-      <div className="dashboard-resource-grid">
-
-        {availability.map((resource) => {
-
-          const unit = getResourceUnit(resource.resource_name);
-
-          const total = Number(resource.total) || 0;
-          const available = Number(resource.available) || 0;
-
-          const percentage =
-            total > 0
-              ? Math.round((available / total) * 100)
-              : 0;
-
-          let availabilityClass = "good";
-
-          if (percentage === 0) {
-            availabilityClass = "critical";
-          } else if (percentage <= 25) {
-            availabilityClass = "low";
-          } else if (percentage <= 50) {
-            availabilityClass = "medium";
-          }
-
-          return (
-            <div
-              className={`dashboard-resource-card ${availabilityClass}`}
-              key={`${resource.resource_type}-${resource.resource_name}`}
-            >
-
-              {/* HEADER */}
-
-              <div className="dashboard-resource-card-header">
-
+              <div className="dashboard-section-heading">
                 <div>
-                  <span className="dashboard-resource-type">
-                    {resource.resource_type}
-                  </span>
+                  <p className="dashboard-label">HOSPITAL RESOURCES</p>
 
-                  <h3>{resource.resource_name}</h3>
+                  <h2>Resource availability</h2>
+
+                  <p className="dashboard-section-description">
+                    Monitor and update your hospital's emergency resources in real time.
+                  </p>
                 </div>
 
-                <div className="dashboard-resource-percentage">
-                  {percentage}%
+                <div className="dashboard-resource-count">
+                  {availability.length}
+                  <span>Resources</span>
                 </div>
-
               </div>
 
-              {/* PROGRESS */}
+              {availability.length === 0 ? (
 
-              <div className="dashboard-resource-progress">
+                <div className="dashboard-empty">
+                  <TriangleAlert size={36} />
 
-                <div className="dashboard-resource-progress-top">
+                  <h3>No resources found</h3>
 
-                  <span>Availability</span>
-
-                  <strong>
-                    {available} / {total} {unit}
-                  </strong>
-
+                  <p>
+                    No availability information has been configured for this hospital.
+                  </p>
                 </div>
 
-                <div className="dashboard-resource-progress-track">
+              ) : (
 
-                  <div
-                    className="dashboard-resource-progress-fill"
-                    style={{
-                      width: `${percentage}%`,
-                    }}
-                  />
+                <>
+                  <div className="dashboard-resource-grid">
 
-                </div>
+                    {availability.map((resource) => {
 
-              </div>
+                      const unit = getResourceUnit(resource.resource_name);
 
-              {/* INPUTS */}
+                      const total = Number(resource.total) || 0;
+                      const available = Number(resource.available) || 0;
 
-              <div className="dashboard-resource-controls">
+                      const percentage =
+                        total > 0
+                          ? Math.round((available / total) * 100)
+                          : 0;
 
-                <div className="dashboard-resource-input-group">
+                      let availabilityClass = "good";
 
-                  <label>Total</label>
-
-                  <div className="dashboard-resource-input-wrapper">
-
-                    <input
-                      type="number"
-                      min="0"
-                      value={resource.total}
-                      onChange={(event) =>
-                        updateResourceValue(
-                          resource.resource_name,
-                          "total",
-                          event.target.value
-                        )
+                      if (percentage === 0) {
+                        availabilityClass = "critical";
+                      } else if (percentage <= 25) {
+                        availabilityClass = "low";
+                      } else if (percentage <= 50) {
+                        availabilityClass = "medium";
                       }
-                    />
 
-                    <span>{unit}</span>
+                      return (
+                        <div
+                          className={`dashboard-resource-card ${availabilityClass}`}
+                          key={`${resource.resource_type}-${resource.resource_name}`}
+                        >
+
+                          {/* HEADER */}
+
+                          <div className="dashboard-resource-card-header">
+
+                            <div>
+                              <span className="dashboard-resource-type">
+                                {resource.resource_type}
+                              </span>
+
+                              <h3>{resource.resource_name}</h3>
+                            </div>
+
+                            <div className="dashboard-resource-percentage">
+                              {percentage}%
+                            </div>
+
+                          </div>
+
+                          {/* PROGRESS */}
+
+                          <div className="dashboard-resource-progress">
+
+                            <div className="dashboard-resource-progress-top">
+
+                              <span>Availability</span>
+
+                              <strong>
+                                {available} / {total} {unit}
+                              </strong>
+
+                            </div>
+
+                            <div className="dashboard-resource-progress-track">
+
+                              <div
+                                className="dashboard-resource-progress-fill"
+                                style={{
+                                  width: `${percentage}%`,
+                                }}
+                              />
+
+                            </div>
+
+                          </div>
+
+                          {/* INPUTS */}
+
+                          <div className="dashboard-resource-controls">
+
+                            <div className="dashboard-resource-input-group">
+
+                              <label>Total</label>
+
+                              <div className="dashboard-resource-input-wrapper">
+
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={resource.total}
+                                  onChange={(event) =>
+                                    updateResourceValue(
+                                      resource.resource_name,
+                                      "total",
+                                      event.target.value
+                                    )
+                                  }
+                                />
+
+                                <span>{unit}</span>
+
+                              </div>
+
+                            </div>
+
+                            <div className="dashboard-resource-input-group">
+
+                              <label>Available</label>
+
+                              <div className="dashboard-resource-input-wrapper">
+
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max={resource.total}
+                                  value={resource.available}
+                                  onChange={(event) =>
+                                    updateResourceValue(
+                                      resource.resource_name,
+                                      "available",
+                                      event.target.value
+                                    )
+                                  }
+                                />
+
+                                <span>{unit}</span>
+
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                          {/* FOOTER */}
+
+                          <div className="dashboard-resource-footer">
+
+                            <span
+                              className={`dashboard-resource-status ${availabilityClass}`}
+                            >
+                              {percentage === 0
+                                ? "Unavailable"
+                                : percentage <= 25
+                                  ? "Very low availability"
+                                  : percentage <= 50
+                                    ? "Limited availability"
+                                    : "Available"}
+                            </span>
+
+                            {resource.updated_at && (
+                              <span>
+                                Updated {formatDate(resource.updated_at)}
+                              </span>
+                            )}
+
+                          </div>
+
+                        </div>
+                      );
+                    })}
 
                   </div>
 
-                </div>
+                  {/* SAVE */}
 
-                <div className="dashboard-resource-input-group">
+                  <div className="dashboard-update-all-container">
 
-                  <label>Available</label>
-
-                  <div className="dashboard-resource-input-wrapper">
-
-                    <input
-                      type="number"
-                      min="0"
-                      max={resource.total}
-                      value={resource.available}
-                      onChange={(event) =>
-                        updateResourceValue(
-                          resource.resource_name,
-                          "available",
-                          event.target.value
-                        )
-                      }
-                    />
-
-                    <span>{unit}</span>
+                    <button
+                      className="dashboard-update-all"
+                      onClick={updateAllAvailability}
+                      disabled={updatingResources}
+                    >
+                      {updatingResources
+                        ? "Updating resources..."
+                        : "Save resource updates"}
+                    </button>
 
                   </div>
+                </>
 
-                </div>
+              )}
 
-              </div>
-
-              {/* FOOTER */}
-
-              <div className="dashboard-resource-footer">
-
-                <span
-                  className={`dashboard-resource-status ${availabilityClass}`}
-                >
-                  {percentage === 0
-                    ? "Unavailable"
-                    : percentage <= 25
-                      ? "Very low availability"
-                      : percentage <= 50
-                        ? "Limited availability"
-                        : "Available"}
-                </span>
-
-                {resource.updated_at && (
-                  <span>
-                    Updated {formatDate(resource.updated_at)}
-                  </span>
-                )}
-
-              </div>
-
-            </div>
-          );
-        })}
-
-      </div>
-
-      {/* SAVE */}
-
-      <div className="dashboard-update-all-container">
-
-        <button
-          className="dashboard-update-all"
-          onClick={updateAllAvailability}
-          disabled={updatingResources}
-        >
-          {updatingResources
-            ? "Updating resources..."
-            : "Save resource updates"}
-        </button>
-
-      </div>
-    </>
-
-  )}
-
-</section>
+            </section>
 
             {/* ==================================================
                 SOS SUMMARY
