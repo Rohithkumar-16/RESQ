@@ -7,7 +7,9 @@ import RequestStatus from "./pages/RequestStatus";
 import HospitalDashboard from "./pages/HospitalDashboard";
 import HospitalLogin from "./pages/HospitalLogin";
 import AddHospital from "./pages/AddHospital";
-
+import PatientLogin from "./pages/PatientLogin";
+import PatientSignup from "./pages/PatientSignup";
+import PatientDashboard from "./pages/PatientDashboard";
 function App() {
   return (
     <BrowserRouter>
@@ -75,6 +77,10 @@ function App() {
           path="/add-hospital"
           element={<AddHospital />}
         />
+        <Route
+          path="/patient-dashboard"
+          element={<PatientDashboard />}
+        />
 
         {/* =====================================================
             FALLBACK
@@ -83,6 +89,11 @@ function App() {
         <Route
           path="*"
           element={<Navigate to="/" replace />}
+        />
+        <Route path="/patient-login" element={<PatientLogin />} />
+        <Route
+          path="/patient-signup"
+          element={<PatientSignup />}
         />
 
       </Routes>
