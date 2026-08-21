@@ -2,6 +2,7 @@ import os
 import random
 import string
 import math
+import requests
 from datetime import datetime, timedelta
 from functools import wraps
 from pathlib import Path
@@ -24,6 +25,15 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+N8N_WEBHOOK_URL = os.environ.get(
+    "N8N_WEBHOOK_URL",
+    ""
+)
+
+N8N_WEBHOOK_SECRET = os.environ.get(
+    "N8N_WEBHOOK_SECRET",
+    ""
+)
 
 db.init_app(app)
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
@@ -205,6 +215,58 @@ def seed_demo_data():
 
     db.session.commit()
 
+def send_to_n8n(payload):
+    """
+    Sends data from Flask to the n8n webhook.
+    Returns the n8n response or an error.
+    """
+
+    if not N8N_WEBHOOK_URL:
+        return {
+            "success": False,
+            "error": "N8N_WEBHOOK_URL is not configured"
+        }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    if N8N_WEBHOOK_SECRET:
+        headers["X-RESQ-SECRET"] = N8N_WEBHOOK_SECRET
+
+    try:
+        response = requests.post(
+            N8N_WEBHOOK_URL,
+            json=payload,
+            headers=headers,
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        try:
+            result = response.json()
+        except ValueError:
+            result = {
+                "raw_response": response.text
+            }
+
+        return {
+            "success": True,
+            "data": result
+        }
+
+    except requests.exceptions.Timeout:
+        return {
+            "success": False,
+            "error": "n8n request timed out"
+        }
+
+    except requests.exceptions.RequestException as error:
+        return {
+            "success": False,
+            "error": str(error)
+        }
 
 @app.get("/")
 def home():
