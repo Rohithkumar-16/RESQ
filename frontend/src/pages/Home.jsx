@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import {
-  Activity,
   ArrowRight,
   Bed,
   Droplets,
+  HeartPulse,
   MapPin,
   Search,
+  ShieldCheck,
   Wind,
   Zap,
 } from "lucide-react";
@@ -15,128 +16,199 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="app">
+    <div className="resq-home">
 
-      {/* =========================
-          HEADER
-      ========================= */}
-      <header className="header">
+      {/* ========================= NAVBAR ========================= */}
 
-        {/* Logo */}
+      <header className="resq-navbar">
+
         <div
-          className="logo"
+          className="resq-logo"
           onClick={() => navigate("/")}
-          style={{ cursor: "pointer" }}
         >
-          <div className="logo-icon">R</div>
+          <div className="resq-logo-mark">R</div>
           <span>RESQ</span>
         </div>
 
-        {/* Navigation */}
-        <nav className="main-nav">
+        <nav className="resq-nav-links">
+          <button onClick={() => navigate("/hospitals")}>
+            Find Care
+          </button>
 
-          <button
-            type="button"
-            onClick={() => navigate("/hospitals")}
-          >
-            Find Hospitals
+          <button onClick={() => navigate("/hospitals")}>
+            Hospitals
           </button>
 
           <button
-            type="button"
+            onClick={() =>
+              document
+                .getElementById("how-it-works")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            How RESQ Works
+          </button>
+
+          <button
+            onClick={() =>
+              document
+                .getElementById("about-resq")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            About
+          </button>
+        </nav>
+
+        <div className="resq-nav-actions">
+
+          <button
+            className="resq-login-link"
             onClick={() => navigate("/patient-login")}
           >
             Patient Login
           </button>
 
           <button
-            type="button"
+            className="resq-hospital-link"
             onClick={() => navigate("/hospital-login")}
           >
             Hospital Login
           </button>
 
           <button
-            type="button"
-            className="register-nav-button"
+            className="resq-nav-cta"
             onClick={() => navigate("/patient-signup")}
           >
-            Register
+            Get Started
+            <ArrowRight size={16} />
           </button>
 
-          <button
-            type="button"
-            className="header-button"
-          >
-            Emergency Help
-          </button>
-
-        </nav>
+        </div>
 
       </header>
 
 
-      {/* =========================
-          MAIN
-      ========================= */}
+      {/* ========================= HERO ========================= */}
+
       <main>
 
-        {/* HERO SECTION */}
-        <section className="hero-section">
+        <section className="resq-hero">
 
-          <div className="hero-content">
+          <div className="resq-hero-content">
 
-            <div className="status-pill">
-              <span className="status-dot"></span>
-              Emergency healthcare, simplified
+            <div className="resq-eyebrow">
+              <span className="resq-eyebrow-dot"></span>
+              Emergency healthcare, connected
             </div>
 
             <h1>
-              Find the right
-              <span> care when it matters.</span>
+              Care that moves
+              <br />
+              <span>when you need it.</span>
             </h1>
 
             <p>
-              Quickly discover nearby hospitals with available
-              ICU beds, blood, oxygen and emergency services.
+              Find nearby hospitals, check critical resources,
+              and connect with emergency care — all in one place.
             </p>
 
-
-            {/* SEARCH BOX */}
-            <div className="search-box">
-
-              <div className="search-input">
-
-                <MapPin size={21} />
-
-                <div>
-
-                  <label>
-                    Your location
-                  </label>
-
-                  <input
-                    type="text"
-                    placeholder="Enter city or location"
-                  />
-
-                </div>
-
-              </div>
+            <div className="resq-hero-actions">
 
               <button
-                type="button"
-                className="search-button"
+                className="resq-primary-button"
                 onClick={() => navigate("/hospitals")}
               >
-                <Search size={19} />
-                Find Hospitals
+                Find a hospital
+                <ArrowRight size={18} />
+              </button>
+
+              <button
+                className="resq-secondary-button"
+                onClick={() => navigate("/hospitals")}
+              >
+                <Zap size={18} />
+                Emergency help
               </button>
 
             </div>
 
-            <p className="search-note">
-              Search hospitals within your preferred radius.
+            <div className="resq-trust-row">
+
+              <div>
+                <ShieldCheck size={17} />
+                Secure healthcare access
+              </div>
+
+              <div>
+                <HeartPulse size={17} />
+                Built for critical moments
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div className="resq-hero-visual">
+
+            <div className="resq-hero-image">
+
+              <div className="resq-image-overlay"></div>
+
+              <div className="resq-floating-card resq-floating-top">
+
+                <div className="resq-floating-icon">
+                  <HeartPulse size={19} />
+                </div>
+
+                <div>
+                  <strong>Care when it matters</strong>
+                  <span>Connected through RESQ</span>
+                </div>
+
+              </div>
+
+              <div className="resq-floating-card resq-floating-bottom">
+
+                <MapPin size={18} />
+
+                <div>
+                  <strong>Find care nearby</strong>
+                  <span>Hospitals & emergency services</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* ========================= INTRO ========================= */}
+
+        <section
+          className="resq-intro"
+          id="about-resq"
+        >
+
+          <div className="resq-intro-small">
+            WHY RESQ
+          </div>
+
+          <div className="resq-intro-main">
+
+            <h2>
+              Healthcare shouldn't feel
+              <span> harder when you're already worried.</span>
+            </h2>
+
+            <p>
+              RESQ brings essential hospital information together
+              so patients can make faster decisions when every
+              second matters.
             </p>
 
           </div>
@@ -144,65 +216,68 @@ function Home() {
         </section>
 
 
-        {/* =========================
-            RESOURCES SECTION
-        ========================= */}
-        <section className="resources-section">
+        {/* ========================= RESOURCES ========================= */}
 
-          <div className="section-heading">
+        <section className="resq-care-section">
+
+          <div className="resq-section-heading">
 
             <div>
 
-              <span>
-                CHECK AVAILABILITY
-              </span>
+              <span>FIND WHAT YOU NEED</span>
 
               <h2>
-                What do you need?
+                The right care,
+                <br />
+                without the guesswork.
               </h2>
 
             </div>
 
             <button
-              type="button"
-              className="view-all"
               onClick={() => navigate("/hospitals")}
+              className="resq-text-button"
             >
-              View all
+              Explore hospitals
               <ArrowRight size={17} />
             </button>
 
           </div>
 
 
-          <div className="resource-grid">
+          <div className="resq-care-grid">
 
-            <ResourceCard
-              icon={<Bed />}
-              title="ICU Beds"
-              description="Find hospitals with available ICU beds"
+            <CareCard
+              icon={<Bed size={25} />}
+              number="01"
+              title="ICU beds"
+              description="Find hospitals with available intensive care beds."
               onClick={() => navigate("/hospitals")}
             />
 
-            <ResourceCard
-              icon={<Droplets />}
-              title="Blood"
-              description="Check blood availability nearby"
+            <CareCard
+              icon={<Droplets size={25} />}
+              number="02"
+              title="Blood availability"
+              description="Check blood availability before you travel."
               onClick={() => navigate("/hospitals")}
             />
 
-            <ResourceCard
-              icon={<Wind />}
+            <CareCard
+              icon={<Wind size={25} />}
+              number="03"
               title="Oxygen"
-              description="Find hospitals with oxygen supply"
+              description="Find hospitals with available oxygen resources."
               onClick={() => navigate("/hospitals")}
             />
 
-            <ResourceCard
-              icon={<Zap />}
-              title="Emergency"
-              description="Find hospitals offering emergency care"
+            <CareCard
+              icon={<Zap size={25} />}
+              number="04"
+              title="Emergency care"
+              description="Find hospitals ready to provide emergency assistance."
               onClick={() => navigate("/hospitals")}
+              emergency
             />
 
           </div>
@@ -210,33 +285,203 @@ function Home() {
         </section>
 
 
-        {/* =========================
-            EMERGENCY SECTION
-        ========================= */}
-        <section className="emergency-section">
+        {/* ========================= SEARCH ========================= */}
 
-          <div className="emergency-icon">
-            <Activity size={25} />
+        <section className="resq-search-section">
+
+          <div className="resq-search-content">
+
+            <span>FIND CARE NEAR YOU</span>
+
+            <h2>
+              Where do you need
+              <br />
+              care?
+            </h2>
+
+            <p>
+              Search by city, location, or hospital name
+              to find available healthcare resources.
+            </p>
+
+            <div className="resq-search-box">
+
+              <MapPin size={20} />
+
+              <input
+                type="text"
+                placeholder="Enter city, location or hospital"
+              />
+
+              <button
+                onClick={() => navigate("/hospitals")}
+              >
+                <Search size={18} />
+                Search
+              </button>
+
+            </div>
+
           </div>
+
+          <div className="resq-search-map">
+
+            <div className="resq-map-grid"></div>
+
+            <div className="resq-map-center">
+
+              <div className="resq-map-pulse"></div>
+
+              <MapPin size={25} />
+
+            </div>
+
+            <div className="resq-map-label">
+              <strong>Hospitals near you</strong>
+              <span>Search to explore available care</span>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* ========================= HOW IT WORKS ========================= */}
+
+        <section
+          className="resq-how"
+          id="how-it-works"
+        >
+
+          <div className="resq-section-heading centered">
+
+            <span>HOW RESQ WORKS</span>
+
+            <h2>
+              From searching to care
+              <br />
+              in a few simple steps.
+            </h2>
+
+          </div>
+
+
+          <div className="resq-steps">
+
+            <Step
+              number="01"
+              title="Find"
+              description="Search for hospitals and emergency services near your location."
+            />
+
+            <Step
+              number="02"
+              title="Check"
+              description="See available ICU beds, blood, oxygen and emergency resources."
+            />
+
+            <Step
+              number="03"
+              title="Connect"
+              description="View hospital information and choose the care that fits your needs."
+            />
+
+            <Step
+              number="04"
+              title="Respond"
+              description="Request emergency assistance and keep track of your request."
+            />
+
+          </div>
+
+        </section>
+
+
+        {/* ========================= TWO SIDES ========================= */}
+
+        <section className="resq-audience">
+
+          <div className="resq-audience-card patient">
+
+            <div className="resq-audience-number">
+              FOR PATIENTS
+            </div>
+
+            <h2>
+              Your care,
+              <br />
+              within reach.
+            </h2>
+
+            <p>
+              Find hospitals, check resources and get
+              the information you need before you travel.
+            </p>
+
+            <button
+              onClick={() => navigate("/patient-signup")}
+            >
+              Create patient account
+              <ArrowRight size={17} />
+            </button>
+
+          </div>
+
+
+          <div className="resq-audience-card hospital">
+
+            <div className="resq-audience-number">
+              FOR HOSPITALS
+            </div>
+
+            <h2>
+              Better visibility.
+              <br />
+              Faster response.
+            </h2>
+
+            <p>
+              Manage resources, respond to emergency
+              requests and keep hospital information updated.
+            </p>
+
+            <button
+              onClick={() => navigate("/hospital-login")}
+            >
+              Hospital portal
+              <ArrowRight size={17} />
+            </button>
+
+          </div>
+
+        </section>
+
+
+        {/* ========================= FINAL CTA ========================= */}
+
+        <section className="resq-final-cta">
 
           <div>
 
-            <h3>
-              Need emergency assistance?
-            </h3>
+            <span>WHEN EVERY SECOND MATTERS</span>
+
+            <h2>
+              Get closer to the
+              <br />
+              care you need.
+            </h2>
 
             <p>
-              Search nearby hospitals and check critical
-              resource availability before you travel.
+              RESQ helps connect patients with hospitals
+              and critical healthcare resources.
             </p>
 
           </div>
 
           <button
-            type="button"
             onClick={() => navigate("/hospitals")}
           >
-            Start Search
+            Find care now
             <ArrowRight size={18} />
           </button>
 
@@ -245,26 +490,87 @@ function Home() {
       </main>
 
 
-      {/* =========================
-          FOOTER
-      ========================= */}
-      <footer>
+      {/* ========================= FOOTER ========================= */}
 
-        <div className="logo">
+      <footer className="resq-footer">
 
-          <div className="logo-icon">
-            R
+        <div className="resq-footer-top">
+
+          <div className="resq-footer-brand">
+
+            <div className="resq-logo">
+
+              <div className="resq-logo-mark">
+                R
+              </div>
+
+              <span>RESQ</span>
+
+            </div>
+
+            <p>
+              Connecting people with emergency
+              healthcare when it matters most.
+            </p>
+
           </div>
 
-          <span>
-            RESQ
-          </span>
+
+          <div className="resq-footer-links">
+
+            <div>
+              <strong>Care</strong>
+
+              <button onClick={() => navigate("/hospitals")}>
+                Find hospitals
+              </button>
+
+              <button onClick={() => navigate("/hospitals")}>
+                ICU availability
+              </button>
+
+              <button onClick={() => navigate("/hospitals")}>
+                Blood availability
+              </button>
+
+              <button onClick={() => navigate("/hospitals")}>
+                Emergency care
+              </button>
+            </div>
+
+
+            <div>
+              <strong>Account</strong>
+
+              <button onClick={() => navigate("/patient-login")}>
+                Patient login
+              </button>
+
+              <button onClick={() => navigate("/patient-signup")}>
+                Patient registration
+              </button>
+
+              <button onClick={() => navigate("/hospital-login")}>
+                Hospital login
+              </button>
+            </div>
+
+          </div>
 
         </div>
 
-        <p>
-          Smart emergency hospital resource management.
-        </p>
+
+        <div className="resq-footer-bottom">
+
+          <span>
+            © 2026 RESQ. Smart emergency healthcare management.
+          </span>
+
+          <span>
+            Built for better emergency access.
+          </span>
+
+        </div>
 
       </footer>
 
@@ -273,41 +579,62 @@ function Home() {
 }
 
 
-/* =========================
-   RESOURCE CARD
-========================= */
-
-function ResourceCard({
+function CareCard({
   icon,
+  number,
   title,
   description,
   onClick,
+  emergency,
 }) {
   return (
     <button
-      type="button"
-      className="resource-card"
+      className={`resq-care-card ${
+        emergency ? "emergency" : ""
+      }`}
       onClick={onClick}
     >
 
-      <div className="resource-icon">
-        {icon}
+      <div className="resq-care-card-top">
+
+        <div className="resq-care-icon">
+          {icon}
+        </div>
+
+        <span>{number}</span>
+
       </div>
 
-      <h3>
-        {title}
-      </h3>
+      <h3>{title}</h3>
 
-      <p>
-        {description}
-      </p>
+      <p>{description}</p>
 
-      <ArrowRight
-        className="card-arrow"
-        size={18}
-      />
+      <div className="resq-care-arrow">
+        <ArrowRight size={18} />
+      </div>
 
     </button>
+  );
+}
+
+
+function Step({
+  number,
+  title,
+  description,
+}) {
+  return (
+    <div className="resq-step">
+
+      <span>{number}</span>
+
+      <div className="resq-step-line"></div>
+
+      <h3>{title}</h3>
+
+      <p>{description}</p>
+
+    </div>
   );
 }
 
