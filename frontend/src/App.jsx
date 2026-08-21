@@ -10,6 +10,8 @@ import AddHospital from "./pages/AddHospital";
 import PatientLogin from "./pages/PatientLogin";
 import PatientSignup from "./pages/PatientSignup";
 import PatientDashboard from "./pages/PatientDashboard";
+import PatientProtectedRoute from "./components/PatientProtectedRoute";
+import HospitalProtectedRoute from "./components/HospitalProtectedRoute";
 function App() {
   return (
     <BrowserRouter>
@@ -66,7 +68,11 @@ function App() {
 
         <Route
           path="/hospital-dashboard"
-          element={<HospitalDashboard />}
+          element={
+            <HospitalProtectedRoute>
+              <HospitalDashboard />
+            </HospitalProtectedRoute>
+          }
         />
 
         {/* =====================================================
@@ -79,7 +85,11 @@ function App() {
         />
         <Route
           path="/patient-dashboard"
-          element={<PatientDashboard />}
+          element={
+            <PatientProtectedRoute>
+              <PatientDashboard />
+            </PatientProtectedRoute>
+          }
         />
 
         {/* =====================================================
