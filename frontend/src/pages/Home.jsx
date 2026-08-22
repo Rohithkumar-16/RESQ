@@ -244,7 +244,48 @@ function Home() {
 
         </section>
 
+        {/* ========================= RESQ AI ========================= */}
 
+        <section className="resq-ai-home-section">
+
+          <div className="resq-ai-home-content">
+
+            <span>RESQ AI</span>
+
+            <h2>
+              Smarter help
+              <br />
+              when every second matters.
+            </h2>
+
+            <p>
+              Upload an injury or emergency image and let RESQ AI
+              analyze visible findings and help identify an appropriate
+              available hospital.
+            </p>
+
+            <button
+              className="resq-ai-home-button"
+              onClick={() => navigate("/ai-triage")}
+            >
+              Try RESQ AI
+              <ArrowRight size={18} />
+            </button>
+
+          </div>
+
+          <div className="resq-ai-home-badge">
+
+            <div>
+              <HeartPulse size={24} />
+            </div>
+
+            <span>AI-assisted</span>
+            <strong>Emergency Triage</strong>
+
+          </div>
+
+        </section>
         {/* ========================= RESOURCES ========================= */}
 
         <section className="resq-care-section">

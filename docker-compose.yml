@@ -1,0 +1,8 @@
+services:
+  hospital-api:
+    build:
+      context: ./hospital-api
+    container_name: resq-hospital-api
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

@@ -3,6 +3,7 @@ import {
   Activity,
   ArrowRight,
   Bed,
+  Brain,
   Droplets,
   LogOut,
   MapPin,
@@ -257,7 +258,43 @@ function PatientDashboard() {
           </div>
 
         </section>
+       
+                {/* AI EMERGENCY TRIAGE */}
 
+        <section className="patient-ai-triage">
+
+          <div className="patient-ai-triage-content">
+
+            <div className="patient-ai-triage-icon">
+              <Brain size={30} />
+            </div>
+
+            <div className="patient-ai-triage-text">
+
+              <span>AI EMERGENCY ASSISTANCE</span>
+
+              <h2>
+                Need urgent medical help?
+              </h2>
+
+              <p>
+                Upload a photo of the patient's condition and let
+                RESQ AI assess the visible severity and recommend
+                the most suitable nearby hospital.
+              </p>
+
+            </div>
+
+            <button
+              onClick={() => navigate("/ai-triage")}
+            >
+              Start AI Triage
+              <ArrowRight size={18} />
+            </button>
+
+          </div>
+
+        </section>
 
         {/* EMERGENCY */}
 

@@ -347,10 +347,11 @@ def login():
     return jsonify(
         {
             "message": "Login successful",
-            "user": {
+                    "user": {
                 "id": user.id,
                 "name": user.name,
                 "email": user.email,
+                "phone": user.phone,
                 "role": user.role,
                 "hospital_id": user.hospital_id,
             },
@@ -390,6 +391,7 @@ def verify_otp_endpoint():
                 "id": user.id,
                 "name": user.name,
                 "email": user.email,
+                "phone": user.phone,
                 "role": user.role,
                 "hospital_id": user.hospital_id,
             },
@@ -402,12 +404,12 @@ def logout():
     session.clear()
     return jsonify({"message": "Logged out"})
 
-
 @app.get("/api/me")
 def me():
     user = current_user()
     if not user:
         return jsonify({"error": "Login required"}), 401
+
     return jsonify(
         {
             "id": user.id,
@@ -415,9 +417,10 @@ def me():
             "email": user.email,
             "role": user.role,
             "hospital_id": user.hospital_id,
+            "phone": user.phone,
+            "designation": user.designation,
         }
     )
-
 
 @app.get("/api/hospitals")
 def get_hospitals():
@@ -431,21 +434,29 @@ def get_hospitals():
 
     hospitals = query.order_by(Hospital.name).all()
     return jsonify(
-        [
-            {
-                "id": h.id,
-                "name": h.name,
-                "address": h.address,
-                "city": h.city,
-                "state": h.state,
-                "latitude": h.latitude,
-                "longitude": h.longitude,
-                "phone": h.phone,
-                "created_at": iso(h.created_at),
-            }
-            for h in hospitals
-        ]
-    )
+    {
+
+        "id": user.id,
+
+        "name": user.name,
+
+        "email": user.email,
+
+        "role": user.role,
+
+        "hospital_id": user.hospital_id,
+
+        "phone": user.phone,
+
+        "designation": user.designation,
+
+        "hospital": (
+            hospital_response(hospital)
+            if hospital
+            else None
+        ),
+    }
+)
 
 
 @app.get("/api/hospitals/<int:hospital_id>")

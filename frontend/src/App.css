@@ -14020,3 +14020,178 @@ footer p {
   }
 
 }
+/* =========================
+   RESQ AI HOME SECTION
+========================= */
+
+.resq-ai-home-section {
+  width: min(1200px, 88%);
+  margin: 0 auto 100px;
+  padding: 55px 60px;
+  border-radius: 28px;
+  background: #173b2b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  overflow: hidden;
+}
+
+.resq-ai-home-content {
+  max-width: 680px;
+}
+
+.resq-ai-home-content > span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  opacity: 0.75;
+}
+
+.resq-ai-home-content h2 {
+  margin: 15px 0;
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.resq-ai-home-content p {
+  max-width: 600px;
+  margin-bottom: 28px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.resq-ai-home-button {
+  border: none;
+  border-radius: 10px;
+  padding: 14px 22px;
+  background: white;
+  color: #173b2b;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.resq-ai-home-badge {
+  min-width: 210px;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resq-ai-home-badge div {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  margin-bottom: 12px;
+}
+
+.resq-ai-home-badge span {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.resq-ai-home-badge strong {
+  font-size: 20px;
+}
+
+@media (max-width: 750px) {
+
+  .resq-ai-home-section {
+    width: 88%;
+    padding: 40px 30px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resq-ai-home-badge {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+}
+/* =========================================================
+   PATIENT AI TRIAGE
+========================================================= */
+
+.patient-ai-triage {
+  margin-top: 32px;
+  margin-bottom: 40px;
+}
+
+.patient-ai-triage-content {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 28px 30px;
+  border-radius: 18px;
+  background: #f4f8ff;
+  border: 1px solid #dbe7f5;
+}
+
+.patient-ai-triage-icon {
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e5efff;
+}
+
+.patient-ai-triage-text {
+  flex: 1;
+}
+
+.patient-ai-triage-text span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.patient-ai-triage-text h2 {
+  margin: 0 0 7px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.patient-ai-triage-text p {
+  margin: 0;
+  max-width: 650px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.patient-ai-triage-content button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 19px;
+  cursor: pointer;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.patient-ai-triage-content button:hover {
+  transform: translateY(-1px);
+}

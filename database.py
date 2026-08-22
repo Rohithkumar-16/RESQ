@@ -861,7 +861,9 @@ def me():
             "role": user.role,
 
             "hospital_id": user.hospital_id,
-
+            
+            "phone": user.phone,
+             
             "designation": user.designation,
 
             "hospital": (
@@ -2090,7 +2092,6 @@ def send_sos():
         "hospital_id",
         "emergency_type",
         "patient_name",
-        "phone",
     ]
 
     if any(
@@ -2103,8 +2104,7 @@ def send_sos():
                 "error": (
                     "hospital_id, "
                     "emergency_type, "
-                    "patient_name and "
-                    "phone are required"
+                    "patient_name are required"
                 )
             }
         ), 400

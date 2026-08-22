@@ -1,0 +1,301 @@
+.resq-ai-page {
+  min-height: 100vh;
+  background: #f7f8f6;
+  color: #17201b;
+}
+
+.resq-ai-header {
+  height: 76px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e8e5;
+}
+
+.resq-ai-back,
+.resq-ai-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.resq-ai-back {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: #4c5a51;
+}
+
+.resq-ai-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #173b2b;
+}
+
+.resq-ai-main {
+  width: min(1100px, 90%);
+  margin: 0 auto;
+  padding: 70px 0 100px;
+}
+
+.resq-ai-hero {
+  max-width: 720px;
+  margin-bottom: 45px;
+}
+
+.resq-ai-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #48715c;
+}
+
+.resq-ai-hero h1 {
+  margin: 18px 0;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 0.98;
+  letter-spacing: -3px;
+}
+
+.resq-ai-hero h1 span {
+  color: #48715c;
+}
+
+.resq-ai-hero p {
+  max-width: 650px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #68736d;
+}
+
+.resq-ai-card {
+  background: #ffffff;
+  border: 1px solid #e3e7e4;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 15px 45px rgba(20, 40, 30, 0.06);
+}
+
+.resq-ai-upload {
+  min-height: 330px;
+  border: 2px dashed #cbd5ce;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fafcfb;
+}
+
+.resq-ai-upload-placeholder {
+  text-align: center;
+  max-width: 450px;
+  padding: 40px;
+  color: #657069;
+}
+
+.resq-ai-upload-placeholder svg {
+  color: #48715c;
+}
+
+.resq-ai-upload-placeholder h3 {
+  margin: 18px 0 8px;
+  font-size: 22px;
+  color: #17201b;
+}
+
+.resq-ai-upload-placeholder p {
+  line-height: 1.6;
+}
+
+.resq-ai-preview {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.resq-ai-upload-button {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-radius: 10px;
+  background: #edf3ef;
+  color: #28533c;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.resq-ai-analyze-button {
+  width: 100%;
+  margin-top: 20px;
+  border: none;
+  border-radius: 12px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: #173b2b;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.resq-ai-analyze-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.resq-ai-error {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #a52c2c;
+}
+
+.resq-ai-results {
+  margin-top: 35px;
+}
+
+.resq-ai-result-header {
+  padding: 25px;
+  border-radius: 18px;
+  background: #173b2b;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resq-ai-result-header span,
+.resq-ai-result-card > span,
+.resq-ai-hospital span,
+.resq-ai-confidence span {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.resq-ai-result-header strong {
+  font-size: 20px;
+}
+
+.resq-ai-result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.resq-ai-result-card {
+  background: white;
+  border: 1px solid #e3e7e4;
+  border-radius: 18px;
+  padding: 25px;
+}
+
+.resq-ai-result-card ul {
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.resq-ai-hospital {
+  margin-top: 20px;
+  padding: 28px;
+  border-radius: 18px;
+  background: #edf3ef;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.resq-ai-hospital h2 {
+  margin: 10px 0 6px;
+}
+
+.resq-ai-hospital p {
+  color: #59665e;
+}
+
+.resq-ai-confidence {
+  text-align: right;
+}
+
+.resq-ai-confidence strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 32px;
+  color: #28533c;
+}
+
+@media (max-width: 700px) {
+  .resq-ai-main {
+    padding-top: 40px;
+  }
+
+  .resq-ai-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resq-ai-hospital {
+    flex-direction: column;
+  }
+
+  .resq-ai-confidence {
+    text-align: left;
+  }
+
+  .resq-ai-hero h1 {
+    letter-spacing: -2px;
+  }
+}
+.resq-ai-send-button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 16px 22px;
+  border: none;
+  border-radius: 12px;
+  background: #c62828;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.resq-ai-send-button:hover {
+  background: #a91f1f;
+}
+
+.resq-ai-send-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.resq-ai-sos-success {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #e8f5e9;
+  border: 1px solid #81c784;
+}
+
+.resq-ai-sos-success strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.resq-ai-sos-success button {
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

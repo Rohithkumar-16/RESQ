@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Activity,
-  CheckCircle,
-  Clock,
-  MapPin,
-  Phone,
-  RefreshCw,
-  TriangleAlert,
-  XCircle,
   MoreVertical,
-  Eye,
+  ArrowRight,
+  Bed,
+  Droplets,
+  Brain,
+  LogOut,
+  MapPin,
+  Search,
+  RefreshCw,
+  Phone,
+  Clock,
+  CheckCircle,
+  XCircle,
+  UserRound,
+  Wind,
+  Zap,
 } from "lucide-react";
 
 const API_URL = "http://localhost:5001/api";
@@ -619,10 +625,11 @@ function HospitalDashboard() {
             {/* ==================================================
                 HOSPITAL RESOURCES
             =================================================== */}
+            {/* =====================================================
 
             {/* ==================================================
-    HOSPITAL RESOURCES
-=================================================== */}
+                 HOSPITAL RESOURCES
+                 =================================================== */}
 
             <section className="dashboard-availability">
 

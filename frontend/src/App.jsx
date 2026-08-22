@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
+import AITriage from "./pages/AITriage";
 import Home from "./pages/Home";
 import Hospitals from "./pages/Hospitals";
 import HospitalDetails from "./pages/HospitalDetails";
@@ -104,6 +104,10 @@ function App() {
         <Route
           path="/patient-signup"
           element={<PatientSignup />}
+        />
+        <Route
+          path="/ai-triage"
+          element={<AITriage />}
         />
 
       </Routes>
