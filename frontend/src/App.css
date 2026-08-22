@@ -13645,3 +13645,378 @@ footer p {
 .resq-current-location-button span {
   white-space: nowrap;
 }
+/* ============================================================
+   RESQ — ADD HOSPITAL / HOSPITAL REGISTRATION
+   Put this at the VERY END of App.css
+   ============================================================ */
+
+.add-hospital-container {
+  min-height: 100vh !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 50px 7% 70px !important;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(21, 149, 112, 0.08),
+      transparent 30%
+    ),
+    #f7faf9 !important;
+  color: #17231f !important;
+  font-family: inherit !important;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.add-hospital-container > h1 {
+  max-width: 900px !important;
+  margin: 0 auto 10px !important;
+  font-size: 38px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  letter-spacing: -1px !important;
+  color: #12352b !important;
+}
+
+.add-hospital-container > p {
+  max-width: 900px !important;
+  margin: 0 auto 35px !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  color: #687873 !important;
+}
+
+/* ============================================================
+   SUCCESS / ERROR
+   ============================================================ */
+
+.add-hospital-container .success-message,
+.add-hospital-container .error-message {
+  max-width: 900px !important;
+  margin: 0 auto 22px !important;
+  padding: 14px 18px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-sizing: border-box !important;
+}
+
+.add-hospital-container .success-message {
+  background: #eaf8f2 !important;
+  border: 1px solid #bde8d6 !important;
+  color: #147653 !important;
+}
+
+.add-hospital-container .error-message {
+  background: #fff1f1 !important;
+  border: 1px solid #f3c5c5 !important;
+  color: #c43d3d !important;
+}
+
+/* ============================================================
+   FORM CARD
+   ============================================================ */
+
+.add-hospital-container > form {
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 38px !important;
+  background: #ffffff !important;
+  border: 1px solid #e3ebe8 !important;
+  border-radius: 22px !important;
+  box-shadow:
+    0 10px 30px rgba(18, 53, 43, 0.06),
+    0 2px 8px rgba(18, 53, 43, 0.03) !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================================
+   SECTION HEADINGS
+   ============================================================ */
+
+.add-hospital-container form > h2 {
+  margin: 34px 0 20px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid #e8efed !important;
+  color: #12352b !important;
+  font-size: 19px !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.2px !important;
+}
+
+.add-hospital-container form > h2:first-child {
+  margin-top: 0 !important;
+}
+
+/* Green accent */
+
+.add-hospital-container form > h2::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 4px !important;
+  height: 19px !important;
+  margin-right: 10px !important;
+  vertical-align: -3px !important;
+  border-radius: 5px !important;
+  background: #159570 !important;
+}
+
+/* ============================================================
+   FORM FIELD
+   ============================================================ */
+
+.add-hospital-container form > div {
+  margin-bottom: 20px !important;
+}
+
+.add-hospital-container form label {
+  display: block !important;
+  margin-bottom: 8px !important;
+  color: #344740 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1px !important;
+}
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+.add-hospital-container form input,
+.add-hospital-container form textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+
+  padding: 13px 15px !important;
+
+  border: 1px solid #d9e4df !important;
+  border-radius: 11px !important;
+
+  background: #fbfdfc !important;
+  color: #17231f !important;
+
+  font-family: inherit !important;
+  font-size: 14px !important;
+
+  outline: none !important;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease !important;
+}
+
+.add-hospital-container form textarea {
+  min-height: 105px !important;
+  resize: vertical !important;
+  line-height: 1.55 !important;
+}
+
+.add-hospital-container form input::placeholder,
+.add-hospital-container form textarea::placeholder {
+  color: #a0ada8 !important;
+}
+
+/* Focus */
+
+.add-hospital-container form input:focus,
+.add-hospital-container form textarea:focus {
+  border-color: #159570 !important;
+  background: #ffffff !important;
+  box-shadow:
+    0 0 0 4px rgba(21, 149, 112, 0.10) !important;
+}
+
+/* ============================================================
+   NUMBER INPUTS
+   ============================================================ */
+
+.add-hospital-container form input[type="number"] {
+  appearance: textfield !important;
+}
+
+.add-hospital-container form input[type="number"]::-webkit-inner-spin-button,
+.add-hospital-container form input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5 !important;
+}
+
+/* ============================================================
+   RESOURCE SECTIONS
+   ============================================================ */
+
+/*
+   Make resource fields look cleaner by giving their
+   individual fields a subtle card appearance.
+*/
+
+.add-hospital-container form > h2 + div,
+.add-hospital-container form > h2 + div + div {
+  background: #f8fbfa !important;
+  padding: 15px !important;
+  border: 1px solid #e5eeea !important;
+  border-radius: 12px !important;
+}
+
+.add-hospital-container form > h2 + div label,
+.add-hospital-container form > h2 + div + div label {
+  margin-bottom: 7px !important;
+}
+
+.add-hospital-container form > h2 + div input,
+.add-hospital-container form > h2 + div + div input {
+  background: #ffffff !important;
+}
+
+/* ============================================================
+   SUBMIT BUTTON
+   ============================================================ */
+
+.add-hospital-container form > button[type="submit"] {
+  width: 100% !important;
+  min-height: 52px !important;
+  margin-top: 18px !important;
+
+  border: none !important;
+  border-radius: 12px !important;
+
+  background: #159570 !important;
+  color: #ffffff !important;
+
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 750 !important;
+
+  cursor: pointer !important;
+
+  box-shadow:
+    0 8px 18px rgba(21, 149, 112, 0.20) !important;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
+
+.add-hospital-container form > button[type="submit"]:hover {
+  background: #117e5f !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 11px 22px rgba(21, 149, 112, 0.25) !important;
+}
+
+.add-hospital-container form > button[type="submit"]:active {
+  transform: translateY(0) !important;
+}
+
+.add-hospital-container form > button[type="submit"]:disabled {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   BACK TO DASHBOARD
+   ============================================================ */
+
+.add-hospital-container > button {
+  display: block !important;
+  width: 900px !important;
+  max-width: 100% !important;
+
+  margin: 18px auto 0 !important;
+  padding: 13px 20px !important;
+
+  border: 1px solid #d8e4df !important;
+  border-radius: 11px !important;
+
+  background: #ffffff !important;
+  color: #416057 !important;
+
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease !important;
+}
+
+.add-hospital-container > button:hover {
+  background: #f1f8f5 !important;
+  border-color: #bcd8ce !important;
+  color: #126f54 !important;
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  .add-hospital-container {
+    padding: 35px 20px 50px !important;
+  }
+
+  .add-hospital-container > h1 {
+    font-size: 30px !important;
+  }
+
+  .add-hospital-container > p {
+    font-size: 14px !important;
+    margin-bottom: 25px !important;
+  }
+
+  .add-hospital-container > form {
+    padding: 25px 20px !important;
+    border-radius: 17px !important;
+  }
+
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+  .add-hospital-container {
+    padding: 25px 14px 40px !important;
+  }
+
+  .add-hospital-container > h1 {
+    font-size: 27px !important;
+    letter-spacing: -0.6px !important;
+  }
+
+  .add-hospital-container > p {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+  }
+
+  .add-hospital-container > form {
+    padding: 20px 16px !important;
+    border-radius: 15px !important;
+  }
+
+  .add-hospital-container form > h2 {
+    font-size: 17px !important;
+    margin-top: 28px !important;
+  }
+
+  .add-hospital-container form input,
+  .add-hospital-container form textarea {
+    padding: 12px !important;
+    font-size: 14px !important;
+  }
+
+  .add-hospital-container > button {
+    width: 100% !important;
+  }
+
+}
