@@ -19,7 +19,7 @@ import {
   Zap,
 } from "lucide-react";
 
-const API_URL = "http://localhost:5001/api";
+const API_URL = "https://resq-s4q8.onrender.com";
 
 function HospitalDashboard() {
   const [requests, setRequests] = useState([]);
