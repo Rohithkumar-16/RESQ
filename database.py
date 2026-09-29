@@ -3033,17 +3033,12 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-
-    print(
-        "RESQ backend running at "
-        "http://localhost:5001"
-    )
-
-    print(
-        f"Database: {DATABASE_PATH}"
-    )
-
+    port = int(os.environ.get("PORT", 5001))
+    print(f"RESQ backend running on port {port}")
+    print(f"Database: {DATABASE_PATH}")
+    
     app.run(
-        debug=True,
-        port=5001,
+        host='0.0.0.0',
+        port=port,
+        debug=False
     )
