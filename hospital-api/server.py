@@ -1,4 +1,6 @@
 from flask import Flask, jsonify
+from flask import send_from_directory
+import os
 
 app = Flask(__name__)
 
@@ -34,5 +36,17 @@ def get_hospitals():
 def health():
     return jsonify({"status": "ok"})
 
+# Serve your React frontend build files
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    # This looks inside your frontend build folder
+    frontend_dir = os.path.join(os.path.dirname(__file__), 'frontend', 'dist')
+    if path != "" and os.path.exists(os.path.join(frontend_dir, path)):
+        return send_from_directory(frontend_dir, path)
+    else:
+        return send_from_directory(frontend_dir, 'index.html')
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
